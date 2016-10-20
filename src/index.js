@@ -22,7 +22,7 @@ var Pack = require('../package');
 
 
 global.log = bunyan.createLogger({
-  name: 'citibike'
+  name: 'service-user'
 });
 
 var ENV = process.env.NODE_ENV || 'default';
@@ -138,7 +138,7 @@ server.start(function (err) {
       uri: cn.info.uri
     };
   });
-  //var faqService = require(__dirname + '/routes/citibikeRoutes')(server);
+  let userRouter = require(__dirname + '/routes/userRoutes')(server);
   console.log(summary);
   log.info('Connections: ', summary);
   server.log('server', 'started: ' + JSON.stringify(summary));
