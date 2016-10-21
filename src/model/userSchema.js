@@ -8,11 +8,11 @@ let schema = new mongoose.Schema({
     last_name: String,
     user_id: String,
     address: [{
-
         favourite: Boolean,
         lon: Number,
         lat: Number,
-        loc: [Number, Number]
+        loc: [Number, Number],
+        type: "home"
     }]
 });
 
