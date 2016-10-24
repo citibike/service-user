@@ -16,20 +16,39 @@ module.exports = function (server, options) {
             notes: 'user data ',
             tags: ['api'],
             validate: {
-                payload: Joi.object({
-                    first_name: Joi.string(),
-                    last_name: Joi.string(),
-                    user_id: Joi.string(),
-                    address: Joi.array({
-                        favourite: Joi.boolean(),
-                        lon: Joi.number(),
-                        lat: Joi.number(),
-                        loc: Joi.array()
-                    })
+                // payload: Joi.object({
+                //     first_name: Joi.string(),
+                //     last_name: Joi.string(),
+                //     user_id: Joi.string(),
+                //     address: Joi.array({
 
-                })
+                //         lon: Joi.number(),
+                //         lat: Joi.number(),
+                //         loc: Joi.array()
+                //     })
+
+                // })
             }
         }
     });
+
+    server.route({
+        method: 'get',
+        path: '/v1/user/{userId}',
+        config: {
+            handler: userHandler.getUser,
+            description: 'get  usser if already exist',
+            notes: 'user data ',
+            tags: ['api'],
+            validate: {
+                params: {
+                    userId: Joi.string()
+                }
+
+            }
+        }
+    });
+
+
 
 }
