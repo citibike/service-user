@@ -41,18 +41,17 @@ module.exports = {
     getUser: function (request, reply) {
         let response = new Response;
         let UserModel = mongoose.model("UserProfileCollection", userSchema);
-        UserModel.find({
+        UserModel.findOne({
             user_id: request.params.userId
         }, function (error, result) {
             if (error) {
                 response.statusCode = 0;
                 response.message = " Unable to run query, got errors";
                 response.error = error;
-            } else if (result && result.length > 0) {
+            } else if (result) {
                 response.statusCode = 1;
                 response.message = " Able to geta data from DB";
                 response.data = result;
-
             } else {
                 response.statusCode = 0;
                 response.message = "No matching record found";
@@ -60,6 +59,34 @@ module.exports = {
             reply(response);
         })
     },
+    // getUserFavourite: function (request, reply) {
+    //     let response = new Response;
+    //     let UserModel = mongoose.model("UserProfileCollection", userSchema);
+    //     UserModel.findOne({
+    //         user_id: request.params.userId
+    //     }, function (error, result) {
+    //         if (error) {
+    //             response.statusCode = 0;
+    //             response.message = " Unable to run query, got errors";
+    //             response.error = error;
+    //         } else if (result) {
+    //             response.statusCode = 1;
+    //             response.message = " Able to geta data from DB";
+    //             response.data = result.favourite_station;
+
+    //         } else {
+    //             response.statusCode = 0;
+    //             response.message = "No matching record found";
+    //         }
+    //         reply(response);
+    //     })
+    // },
+    // getUserAddress: function (request, reply) {
+
+    // },
+    // getUserAddressByType: function (request, reply) {
+
+    // },
     removeUser: function (request, reply) {
         let response = new Response;
         let UserModel = mongoose.model("UserProfileCollection", userSchema);

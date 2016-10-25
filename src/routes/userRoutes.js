@@ -36,40 +36,6 @@ module.exports = function (server, options) {
     });
 
     server.route({
-        method: 'get',
-        path: '/v1/user/{userId}',
-        config: {
-            handler: userHandler.getUser,
-            description: 'get  usser if already exist',
-            notes: 'given user id should be present in db',
-            tags: ['api'],
-            validate: {
-                params: {
-                    userId: Joi.string()
-                }
-
-            }
-        }
-    });
-
-    server.route({
-        method: 'delete',
-        path: '/v1/user/{userId}',
-        config: {
-            handler: userHandler.removeUser,
-            description: 'remove usser if already exist',
-            notes: 'given user id should be present in db',
-            tags: ['api'],
-            validate: {
-                params: {
-                    userId: Joi.string()
-                }
-
-            }
-        }
-    });
-
-    server.route({
         method: 'put',
         path: '/v1/user',
         config: {
@@ -96,6 +62,93 @@ module.exports = function (server, options) {
             }
         }
     });
+    //get user 
+    server.route({
+        method: 'get',
+        path: '/v1/user/{userId}',
+        config: {
+            handler: userHandler.getUser,
+            description: 'get  usser if already exist by user id',
+            notes: 'given user id should be present in db',
+            tags: ['api'],
+            validate: {
+                params: {
+                    userId: Joi.string()
+                }
+
+            }
+        }
+    });
+    //user favourite_stations
+    // server.route({
+    //     method: 'get',
+    //     path: '/v1/user/{userId}/favourite',
+    //     config: {
+    //         handler: userHandler.getUserFavourite,
+    //         description: 'get  usser if already exist by user id',
+    //         notes: 'given user id should be present in db',
+    //         tags: ['api'],
+    //         validate: {
+    //             params: {
+    //                 userId: Joi.string()
+    //             }
+
+    //         }
+    //     }
+    // });
+    //user favourite_stations
+    // server.route({
+    //     method: 'get',
+    //     path: '/v1/user/{userId}/address',
+    //     config: {
+    //         handler: userHandler.getUserAddress,
+    //         description: 'get  usser if already exist by user id',
+    //         notes: 'given user id should be present in db',
+    //         tags: ['api'],
+    //         validate: {
+    //             params: {
+    //                 userId: Joi.string()
+    //             }
+
+    //         }
+    //     }
+    // });
+    //user favourite_stations
+    // server.route({
+    //     method: 'get',
+    //     path: '/v1/user/{userId}/address/{type}',
+    //     config: {
+    //         handler: userHandler.getUserAddressByType,
+    //         description: 'get  usser if already exist by user id',
+    //         notes: 'given user id should be present in db',
+    //         tags: ['api'],
+    //         validate: {
+    //             params: {
+    //                 userId: Joi.string()
+    //             }
+
+    //         }
+    //     }
+    // });
+    //delete user 
+    server.route({
+        method: 'delete',
+        path: '/v1/user/{userId}',
+        config: {
+            handler: userHandler.removeUser,
+            description: 'remove usser if already exist',
+            notes: 'given user id should be present in db',
+            tags: ['api'],
+            validate: {
+                params: {
+                    userId: Joi.string()
+                }
+
+            }
+        }
+    });
+
+
 
 
 
