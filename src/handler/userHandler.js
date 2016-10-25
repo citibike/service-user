@@ -25,10 +25,11 @@ module.exports = {
         // Find the document
         UserModel.findOneAndUpdate(query, update, options, function (error, result) {
             if (error) {
-                response.status = response.failure;
+                response.statusCode = 0;
                 response.message = " Unable to saved latest data into DB";
+                response.error = error;
             } else {
-                response.status = response.success;
+                response.statusCode = 1;
                 response.message = " Saved latest data into DB";
                 response.data = result;
             }
@@ -42,9 +43,45 @@ module.exports = {
         let UserModel = mongoose.model("UserProfileCollection", userSchema);
         UserModel.find({
             user_id: request.params.userId
-        }, function (err, result) {
-            if (err) throw err;
-            reply(result);
+        }, function (error, result) {
+            if (error) {
+                response.statusCode = 0;
+                response.message = " Unable to run query, got errors";
+                response.error = error;
+            } else if (result && result.length > 0) {
+                response.statusCode = 1;
+                response.message = " Able to geta data from DB";
+                response.data = result;
+
+            } else {
+                response.statusCode = 0;
+                response.message = "No matching record found";
+            }
+            reply(response);
         })
+    },
+    removeUser: function (request, reply) {
+        let response = new Response;
+        let UserModel = mongoose.model("UserProfileCollection", userSchema);
+        UserModel.findOneAndRemove({
+            user_id: request.params.userId
+        }, function (error, result) {
+            if (error) {
+                response.statusCode = 0;
+                response.message = " failed to run query";
+                response.error = error;
+            } else if (result) {
+                response.statusCode = 1;
+                response.message = " Able to geta data from DB";
+                response.data = result;
+
+            } else {
+                response.statusCode = 0;
+                response.message = " No matching record found to delete";
+            }
+            reply(response);
+        });
     }
+
+
 }

@@ -13,21 +13,24 @@ module.exports = function (server, options) {
         config: {
             handler: userHandler.createOrUpdateUser,
             description: 'Create a new usser if already existed then update',
-            notes: 'user data ',
+            notes: 'insert or upsert',
             tags: ['api'],
             validate: {
-                // payload: Joi.object({
-                //     first_name: Joi.string(),
-                //     last_name: Joi.string(),
-                //     user_id: Joi.string(),
-                //     address: Joi.array({
+                payload: Joi.object({
+                    first_name: Joi.string(),
+                    last_name: Joi.string(),
+                    user_id: Joi.string(),
+                    address: Joi.array({
+                        lon: Joi.number(),
+                        lat: Joi.number(),
+                        type: Joi.string(),
+                        address_str: Joi.string(),
+                        loc: Joi.array()
+                    }),
+                    favourite_station: Joi.array({
 
-                //         lon: Joi.number(),
-                //         lat: Joi.number(),
-                //         loc: Joi.array()
-                //     })
-
-                // })
+                    })
+                })
             }
         }
     });
@@ -38,13 +41,58 @@ module.exports = function (server, options) {
         config: {
             handler: userHandler.getUser,
             description: 'get  usser if already exist',
-            notes: 'user data ',
+            notes: 'given user id should be present in db',
             tags: ['api'],
             validate: {
                 params: {
                     userId: Joi.string()
                 }
 
+            }
+        }
+    });
+
+    server.route({
+        method: 'delete',
+        path: '/v1/user/{userId}',
+        config: {
+            handler: userHandler.removeUser,
+            description: 'remove usser if already exist',
+            notes: 'given user id should be present in db',
+            tags: ['api'],
+            validate: {
+                params: {
+                    userId: Joi.string()
+                }
+
+            }
+        }
+    });
+
+    server.route({
+        method: 'put',
+        path: '/v1/user',
+        config: {
+            handler: userHandler.createOrUpdateUser,
+            description: 'update  usser if already exist',
+            notes: 'given user id should be present in db',
+            tags: ['api'],
+            validate: {
+                payload: Joi.object({
+                    first_name: Joi.string(),
+                    last_name: Joi.string(),
+                    user_id: Joi.string(),
+                    address: Joi.array({
+                        lon: Joi.number(),
+                        lat: Joi.number(),
+                        type: Joi.string(),
+                        address_str: Joi.string(),
+                        loc: Joi.array()
+                    }),
+                    favourite_station: Joi.array({
+
+                    })
+                })
             }
         }
     });

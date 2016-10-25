@@ -1,11 +1,9 @@
 'use strict';
 
 
-var Response = function () {
+let Response = function () {
 
 }
-
-
 Response.prototype.status = function (status) {
     this.status = status;
 }
@@ -15,11 +13,7 @@ Response.prototype.message = function (message) {
 Response.prototype.data = function (data) {
     this.data = data;
 }
-Response.prototype.success = "Success";
-Response.prototype.failure = "Failure";
-
-
-
-
-
+Response.prototype.error = function (error) {
+    this.error = JSON.stringify(error);
+}
 module.exports = Response;
