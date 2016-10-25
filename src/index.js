@@ -1,37 +1,30 @@
 'use strict';
 
-var config = require('config'),
-  path = require('path'),
-  glob = require('glob'),
-  args = require('argify'),
+let path = require('path'),
+
+
   Lout = require('lout'),
   Good = require('good'),
   GoodFile = require('good-file'),
-
   bunyan = require('bunyan'),
-  q = require('q');
-
-var Hapi = require('hapi');
-var Inert = require('inert');
-var Vision = require('vision');
-var HapiSwagger = require('hapi-swagger');
-var Pack = require('../package');
-
-
-
-
+  q = require('q'),
+  Hapi = require('hapi'),
+  Inert = require('inert'),
+  Vision = require('vision'),
+  HapiSwagger = require('hapi-swagger'),
+  Pack = require('../package');
 
 global.log = bunyan.createLogger({
   name: 'service-user'
 });
 
-var ENV = process.env.NODE_ENV || 'default';
+
 
 
 /**
  * Construct the server
  */
-var server = new Hapi.Server({
+let server = new Hapi.Server({
   connections: {
     routes: {
       cors: true,
@@ -54,7 +47,7 @@ server.connection({
 
 });
 //debug('added port: ', config.port);
-var swaggerOptions = {
+let swaggerOptions = {
   info: {
     'title': 'CITIBIKE Service API Documentation',
     'version': Pack.version
@@ -74,7 +67,7 @@ server.register([Inert, Vision, {
 /**
  * Build a logger for the server & each service
  */
-var reporters = [new GoodFile({
+let reporters = [new GoodFile({
   log: '*'
 }, __dirname + '/../logs/server.log')];
 
@@ -88,16 +81,7 @@ server.route({
     }
   }
 });
-// server.route({
-//   method: 'get',
-//   path: '/',
-//   handler: {
-//     directory: {
-//       path: __dirname + '/../public',
-//       listing: true
-//     }
-//   }
-// });
+
 
 /**
  * Add logging
@@ -110,7 +94,7 @@ server.register({
   }
 }, function (err) {
   if (err) throw new Error(err);
-  if (ENV !== 'test') console.log('Plugin loaded: Good');
+
   log.debug('registered Good for logging with reporters: ', reporters);
 });
 
@@ -121,18 +105,18 @@ server.register({
   register: Lout
 }, function (err) {
   if (err) throw new Error(err);
-  if (ENV !== 'test') console.log('Plugin loaded: Lout');
+
   log.debug('added Lout for /docs');
 });
 
 /**
  * If this isn't for testing, start the server
  */
-//if (ENV !== 'test')
+
 server.start(function (err) {
   if (err) throw new Error(err);
   log.info('server started!');
-  var summary = server.connections.map(function (cn) {
+  let summary = server.connections.map(function (cn) {
     return {
       labels: cn.settings.labels,
       uri: cn.info.uri
