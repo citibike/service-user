@@ -12,24 +12,55 @@ module.exports = function (server, options) {
         path: '/v1/user',
         config: {
             handler: userHandler.createOrUpdateUser,
-            description: 'Create a new usser if already existed then update',
+            description: 'Create a new user, if already existed then update',
             notes: 'insert or upsert',
             tags: ['api'],
             validate: {
                 payload: Joi.object({
                     first_name: Joi.string(),
                     last_name: Joi.string(),
-                    user_id: Joi.string(),
-                    address: Joi.array({
-                        lon: Joi.number(),
-                        lat: Joi.number(),
-                        type: Joi.string(),
-                        address_str: Joi.string(),
-                        loc: Joi.array()
-                    }),
-                    favourite_station: Joi.array({
+                    user_id: Joi.string().required()
+                })
+            }
+        }
+    });
 
-                    })
+    server.route({
+        method: 'post',
+        path: '/v1/address',
+        config: {
+            handler: userHandler.createOrUpdateUserAddress,
+            description: 'Create a new user address if already existed then update',
+            notes: 'insert or upsert',
+            tags: ['api'],
+            validate: {
+                payload: Joi.object().keys({
+                    user_id: Joi.string().required(),
+                    lon: Joi.number(),
+                    lat: Joi.number(),
+                    type: Joi.string(),
+                    address_str: Joi.string(),
+                    loc: Joi.array().items(Joi.number(), Joi.number())
+                })
+            }
+        }
+    });
+    server.route({
+        method: 'post',
+        path: '/v1/favourite',
+        config: {
+            handler: userHandler.createOrUpdateUserFavStation,
+            description: 'Create a new user address if already existed then update',
+            notes: 'insert or upsert',
+            tags: ['api'],
+            validate: {
+                payload: Joi.object().keys({
+                    user_id: Joi.string().required(),
+                    lon: Joi.number(),
+                    lat: Joi.number(),
+                    type: Joi.string(),
+                    address_str: Joi.string(),
+                    loc: Joi.array()
                 })
             }
         }
@@ -44,20 +75,11 @@ module.exports = function (server, options) {
             notes: 'given user id should be present in db',
             tags: ['api'],
             validate: {
-                payload: Joi.object({
+                payload: Joi.object().keys({
                     first_name: Joi.string(),
                     last_name: Joi.string(),
-                    user_id: Joi.string(),
-                    address: Joi.array({
-                        lon: Joi.number(),
-                        lat: Joi.number(),
-                        type: Joi.string(),
-                        address_str: Joi.string(),
-                        loc: Joi.array()
-                    }),
-                    favourite_station: Joi.array({
+                    user_id: Joi.string()
 
-                    })
                 })
             }
         }
@@ -113,23 +135,24 @@ module.exports = function (server, options) {
     //         }
     //     }
     // });
-    //user favourite_stations
-    // server.route({
-    //     method: 'get',
-    //     path: '/v1/user/{userId}/address/{type}',
-    //     config: {
-    //         handler: userHandler.getUserAddressByType,
-    //         description: 'get  usser if already exist by user id',
-    //         notes: 'given user id should be present in db',
-    //         tags: ['api'],
-    //         validate: {
-    //             params: {
-    //                 userId: Joi.string()
-    //             }
+    //user address with type 
+    server.route({
+        method: 'get',
+        path: '/v1/user/{userId}/address/{type}',
+        config: {
+            handler: userHandler.getUserAddressByType,
+            description: 'get  usser if already exist by user id',
+            notes: 'given user id should be present in db',
+            tags: ['api'],
+            validate: {
+                params: {
+                    userId: Joi.string().required(),
+                    type: Joi.string().required()
+                }
 
-    //         }
-    //     }
-    // });
+            }
+        }
+    });
     //delete user 
     server.route({
         method: 'delete',

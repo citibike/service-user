@@ -3,6 +3,8 @@
 
 let mongoose = require('../dao/db');
 let userSchema = require('../model/userSchema');
+let userAddressSchema = require('../model/userAddressSchema');
+let userFavStationSchema = require('../model/userFavStationSchema');
 let Response = require('../model/response');
 
 // //exports
@@ -38,6 +40,47 @@ module.exports = {
         });
 
     },
+    createOrUpdateUserAddress: function (request, reply) {
+        let response = new Response;
+        let UserAddressModel = mongoose.model("UserAddressCollection", userAddressSchema);
+        let userAddress = new UserAddressModel(request.payload);
+
+        userAddress.save(function (error, result) {
+            if (error) {
+                response.statusCode = 0;
+                response.message = " Unable to saved latest data into DB";
+                response.error = error;
+            } else {
+                response.statusCode = 1;
+                response.message = " Saved latest data into DB";
+                response.data = result;
+            }
+
+            reply(response);
+        });
+
+    },
+    createOrUpdateUserFavStation: function (request, reply) {
+        let response = new Response;
+        let UserFavStaationModel = mongoose.model("UserFavStationCollection", userFavStationSchema);
+        let userFavStation = new UserFavStaationModel(request.payload);
+
+        // Find the document
+        userFavStation.save(function (error, result) {
+            if (error) {
+                response.statusCode = 0;
+                response.message = " Unable to saved latest data into DB";
+                response.error = error;
+            } else {
+                response.statusCode = 1;
+                response.message = " Saved latest data into DB";
+                response.data = result;
+            }
+
+            reply(response);
+        });
+
+    },
     getUser: function (request, reply) {
         let response = new Response;
         let UserModel = mongoose.model("UserProfileCollection", userSchema);
@@ -59,55 +102,94 @@ module.exports = {
             reply(response);
         })
     },
-    // getUserFavourite: function (request, reply) {
-    //     let response = new Response;
-    //     let UserModel = mongoose.model("UserProfileCollection", userSchema);
-    //     UserModel.findOne({
-    //         user_id: request.params.userId
-    //     }, function (error, result) {
-    //         if (error) {
-    //             response.statusCode = 0;
-    //             response.message = " Unable to run query, got errors";
-    //             response.error = error;
-    //         } else if (result) {
-    //             response.statusCode = 1;
-    //             response.message = " Able to geta data from DB";
-    //             response.data = result.favourite_station;
-
-    //         } else {
-    //             response.statusCode = 0;
-    //             response.message = "No matching record found";
-    //         }
-    //         reply(response);
-    //     })
-    // },
-    // getUserAddress: function (request, reply) {
-
-    // },
-    // getUserAddressByType: function (request, reply) {
-
-    // },
-    removeUser: function (request, reply) {
+    getUserAddressByType: function (request, reply) {
         let response = new Response;
-        let UserModel = mongoose.model("UserProfileCollection", userSchema);
-        UserModel.findOneAndRemove({
-            user_id: request.params.userId
+        let UserModel = mongoose.model("useraddresscollections", userSchema);
+        UserModel.find({
+            user_id: request.params.userId,
+            type: request.params.type
+
+
         }, function (error, result) {
             if (error) {
                 response.statusCode = 0;
-                response.message = " failed to run query";
+                response.message = " Unable to run query, got errors";
                 response.error = error;
-            } else if (result) {
+            } else if (result && result.length > 0) {
                 response.statusCode = 1;
                 response.message = " Able to geta data from DB";
                 response.data = result;
 
             } else {
                 response.statusCode = 0;
-                response.message = " No matching record found to delete";
+                response.message = "No matching record found";
             }
             reply(response);
-        });
+        })
+    },
+    // getUserFavourite : function (request, reply) {
+
+    // },
+    //getUserAddressByType : function (request, reply) {
+
+    // },
+    removeUser: function (request, reply) {
+        let response = new Response;
+        let UserModel = mongoose.model("UserProfileCollection", userSchema);
+        let UserAddressSchema = mongoose.model("UserAddressCollection", userAddressSchema);
+        let UserFavStationSchema = mongoose.model("UserFavStationCollection", userFavStationSchema);
+        UserModel.findOneAndRemove({
+            user_id: request.params.userId
+        }, function (error, result) {
+            if (error) {
+                response.statusCode = 0;
+                response.message = "user delete - failed to run query";
+                response.error = error;
+            } else if (result) {
+                response.statusCode = 1;
+                response.message = " user delete completedd";
+                response.data = result;
+
+            } else {
+                response.statusCode = 0;
+                response.message = " No matching user record found to delete";
+            }
+            UserAddressSchema.remove({
+                user_id: request.params.userId
+            }, function (error, result) {
+                if (error) {
+                    response.statusCode = 0;
+                    response.message += " ; user address delete - failed to run query";
+                    response.error = error;
+                } else if (result) {
+                    response.statusCode = 1;
+                    response.message += " ; user address delete completedd";
+                    response.data = result;
+
+                } else {
+                    response.statusCode = 0;
+                    response.message += " ; No matching user address record found to delete";
+                }
+                UserFavStationSchema.remove({
+                    user_id: request.params.userId
+                }, function (error, result) {
+                    if (error) {
+                        response.statusCode = 0;
+                        response.message += " ; user favourite station delete - failed to run query";
+                        response.error = error;
+                    } else if (result) {
+                        response.statusCode = 1;
+                        response.message += " ; user favourite station delete completedd";
+                        response.data = result;
+
+                    } else {
+                        response.statusCode = 0;
+                        response.message += " No matching user favourite station  record found to delete";
+                    }
+                    reply(response);
+                });
+            });
+        })
     }
 
 

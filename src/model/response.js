@@ -4,8 +4,8 @@
 let Response = function () {
 
 }
-Response.prototype.status = function (status) {
-    this.status = status;
+Response.prototype.statusCode = function (statusCode) {
+    this.statusCode = statusCode;
 }
 Response.prototype.message = function (message) {
     this.message = message;

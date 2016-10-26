@@ -3,17 +3,13 @@
 var mongoose = require('../dao/db');
 
 
-
-
 let schema = new mongoose.Schema({
-
-    first_name: String,
-    last_name: String,
     user_id: String,
-
+    lon: Number,
+    lat: Number,
+    loc: [Number, Number],
+    type: String,
+    address_str: String
 });
-
-
-
 
 module.exports = schema;
