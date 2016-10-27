@@ -1,11 +1,12 @@
 'use strict';
 
-
+let requestModule = require('request');
 let mongoose = require('../dao/db');
 let userSchema = require('../model/userSchema');
 let userAddressSchema = require('../model/userAddressSchema');
 let userFavStationSchema = require('../model/userFavStationSchema');
 let Response = require('../model/response');
+let settings = require('../config/settings');
 
 // //exports
 module.exports = {
@@ -45,7 +46,18 @@ module.exports = {
         let UserAddressModel = mongoose.model("UserAddressCollection", userAddressSchema);
         let userAddress = new UserAddressModel(request.payload);
 
-        userAddress.save(function (error, result) {
+        var query = {
+                user_id: request.payload.user_id,
+                type: request.payload.type
+            },
+            update = request.payload,
+            options = {
+                upsert: true,
+                new: true,
+                setDefaultsOnInsert: true
+            };
+        // Find the document
+        UserAddressModel.findOneAndUpdate(query, update, options, function (error, result) {
             if (error) {
                 response.statusCode = 0;
                 response.message = " Unable to saved latest data into DB";
@@ -58,6 +70,19 @@ module.exports = {
 
             reply(response);
         });
+        // userAddress.save(function (error, result) {
+        //     if (error) {
+        //         response.statusCode = 0;
+        //         response.message = " Unable to saved latest data into DB";
+        //         response.error = error;
+        //     } else {
+        //         response.statusCode = 1;
+        //         response.message = " Saved latest data into DB";
+        //         response.data = result;
+        //     }
+
+        //     reply(response);
+        // });
 
     },
     createOrUpdateUserFavStation: function (request, reply) {
@@ -102,13 +127,15 @@ module.exports = {
             reply(response);
         })
     },
+    //type: request.params.type
     getUserAddressByType: function (request, reply) {
         let response = new Response;
-        let UserModel = mongoose.model("useraddresscollections", userSchema);
-        UserModel.find({
+        let AddressModel = mongoose.model("useraddresscollections", userSchema);
+        AddressModel.find({
             user_id: request.params.userId,
-            type: request.params.type
-
+            type: {
+                $regex: new RegExp(request.params.type, "i")
+            }
 
         }, function (error, result) {
             if (error) {
@@ -190,7 +217,35 @@ module.exports = {
                 });
             });
         })
+    }, //end of remove user
+    //start geocode
+    getAddressGeoCode: function (request, reply) {
+        let response = new Response;
+        requestModule({
+            url: settings.googleApiUrl,
+            method: 'GET',
+            qs: {
+                address: request.query.address,
+                key: settings.googleApiKey
+            }
+        }, function (error, result, body) {
+            if (error) {
+                response.statusCode = 0;
+                response.message = " google api failed, got errors";
+                response.error = error;
+            } else {
+                response.statusCode = 1;
+                response.message = " Able to geta data from google api";
+                response.data = (result.body) ? JSON.parse(result.body) : null;
+
+            }
+            reply(response);
+
+
+        });
+
     }
+
 
 
 }

@@ -27,7 +27,7 @@ module.exports = function (server, options) {
 
     server.route({
         method: 'post',
-        path: '/v1/address',
+        path: '/v1/user/address',
         config: {
             handler: userHandler.createOrUpdateUserAddress,
             description: 'Create a new user address if already existed then update',
@@ -47,7 +47,7 @@ module.exports = function (server, options) {
     });
     server.route({
         method: 'post',
-        path: '/v1/favourite',
+        path: '/v1/user/favourite',
         config: {
             handler: userHandler.createOrUpdateUserFavStation,
             description: 'Create a new user address if already existed then update',
@@ -165,6 +165,24 @@ module.exports = function (server, options) {
             validate: {
                 params: {
                     userId: Joi.string()
+                }
+
+            }
+        }
+    });
+
+    //user address with type 
+    server.route({
+        method: 'get',
+        path: '/v1/user/geocode',
+        config: {
+            handler: userHandler.getAddressGeoCode,
+            description: 'get  usser if already exist by user id',
+            notes: 'given user id should be present in db',
+            tags: ['api'],
+            validate: {
+                query: {
+                    address: Joi.string().required()
                 }
 
             }

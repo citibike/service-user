@@ -7,7 +7,10 @@ let schema = new mongoose.Schema({
     user_id: String,
     lon: Number,
     lat: Number,
-    loc: [Number, Number],
+    loc: {
+        type: [Number],
+        index: '2dsphere'
+    },
     type: String,
     address_str: String
 });
