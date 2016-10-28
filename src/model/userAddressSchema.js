@@ -11,7 +11,11 @@ let schema = new mongoose.Schema({
         type: [Number],
         index: '2dsphere'
     },
-    type: String,
+    type: {
+        type: String,
+        lowercase: true,
+        trim: true
+    },
     address_str: String
 });
 

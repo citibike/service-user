@@ -31,12 +31,13 @@ let getGoogleApiKey = function () {
         log.error('googleApiKeyService not available, reading local hardcoded values');
         let dummyData = require('./notToCommit');
         googleApiKeyService = {};
-        googleApiKeyService.key = {};
-        googleApiKeyService.key = dummyData.googleApiKey;
+        googleApiKeyService.credentials = {};
+        googleApiKeyService.credentials.key = {};
+        googleApiKeyService.credentials.key = dummyData.googleApiKey;
     } else {
         log.info('googleApiKeyService  available, reading  service details');
     }
-    return googleApiKeyService.key;
+    return googleApiKeyService.credentials.key;
 
 }
 

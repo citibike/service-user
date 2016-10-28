@@ -44,7 +44,18 @@ module.exports = {
     createOrUpdateUserAddress: function (request, reply) {
         let response = new Response;
         let UserAddressModel = mongoose.model("UserAddressCollection", userAddressSchema);
-        let userAddress = new UserAddressModel(request.payload);
+        /**
+         * temporary fix for address type lowercase 
+         * evem after settomg lowercase in schema type is saving as it is
+         * start 
+         *  */
+        if (request.payload.type != null) {
+            request.payload.type = request.payload.type.toLowerCase();
+        }
+
+        /**
+         * end 
+         */
 
         var query = {
                 user_id: request.payload.user_id,
@@ -131,11 +142,13 @@ module.exports = {
     getUserAddressByType: function (request, reply) {
         let response = new Response;
         let AddressModel = mongoose.model("useraddresscollections", userSchema);
+        if (null != request.params.type) {
+            request.params.type = request.params.type.toLowerCase(); //as address type always saved in lower case
+        }
+
         AddressModel.find({
             user_id: request.params.userId,
-            type: {
-                $regex: new RegExp(request.params.type, "i")
-            }
+            type: request.params.type
 
         }, function (error, result) {
             if (error) {
