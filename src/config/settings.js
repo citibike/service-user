@@ -25,22 +25,23 @@ let mLabServiceCredentials = function () {
 
 }
 let getGoogleApiKey = function () {
-    //** local testing **//
+        //** local testing **//
 
-    if (googleApiKeyService == null) {
-        log.error('googleApiKeyService not available, reading local hardcoded values');
-        let dummyData = require('./notToCommit');
-        googleApiKeyService = {};
-        googleApiKeyService.credentials = {};
-        googleApiKeyService.credentials.key = {};
-        googleApiKeyService.credentials.key = dummyData.googleApiKey;
-    } else {
-        log.info('googleApiKeyService  available, reading  service details');
+        if (googleApiKeyService == null) {
+            log.error('googleApiKeyService not available, reading local hardcoded values');
+            let dummyData = require('./notToCommit');
+            googleApiKeyService = {};
+            googleApiKeyService.credentials = {};
+            googleApiKeyService.credentials.key = {};
+            googleApiKeyService.credentials.key = dummyData.googleApiKey;
+        } else {
+            log.info('googleApiKeyService  available, reading  service details');
+        }
+        return googleApiKeyService.credentials.key;
+
     }
-    return googleApiKeyService.credentials.key;
-
-}
-
+    //https://maps.googleapis.com/maps/api/place/textsearch/json?
+    //https://maps.googleapis.com/maps/api/geocode/json
 let settings = {
     gbfsBase: 'https://gbfs.citibikenyc.com/gbfs/',
     gbfsFeed: 'gbfs.json',
@@ -51,7 +52,8 @@ let settings = {
     system_alerts: 'en/system_alerts.json',
     mongoUrl: mLabServiceCredentials(),
     googleApiKey: getGoogleApiKey(),
-    googleApiUrl: 'https://maps.googleapis.com/maps/api/geocode/json'
+    googleGeoCodeApiUrl: 'https://maps.googleapis.com/maps/api/geocode/json',
+    googlePlaceApiTextSearchUrl: 'https://maps.googleapis.com/maps/api/place/textsearch/json'
 }
 
 module.exports = settings;

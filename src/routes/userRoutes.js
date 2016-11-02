@@ -171,14 +171,31 @@ module.exports = function (server, options) {
         }
     });
 
-    //user address with type 
+    //geo code finder
     server.route({
         method: 'get',
         path: '/v1/user/geocode',
         config: {
             handler: userHandler.getAddressGeoCode,
-            description: 'get  usser if already exist by user id',
-            notes: 'given user id should be present in db',
+            description: 'get geocode location for matching address',
+            notes: 'geocode location',
+            tags: ['api'],
+            validate: {
+                query: {
+                    address: Joi.string().required()
+                }
+
+            }
+        }
+    });
+    //geo code finder through place api
+    server.route({
+        method: 'get',
+        path: '/v1/user/placeGeocode',
+        config: {
+            handler: userHandler.getPlaceGeoCode,
+            description: 'get places nearby to given address with geo location',
+            notes: 'get places nearby',
             tags: ['api'],
             validate: {
                 query: {
