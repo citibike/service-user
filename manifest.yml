@@ -9,4 +9,3 @@ applications:
   path: .
   services:
    - mongo_cb
-   - google_api_key

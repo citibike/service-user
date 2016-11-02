@@ -58,7 +58,7 @@ server.register([Inert, Vision, {
   'register': HapiSwagger,
   'options': swaggerOptions
 }], function (err) {
-  err ? log.info("Inert or Vision plugin failed, it will stop swagger") : log.info("Inert or Vision plugin registered, it will start  swagger");
+  if (err) log.info("Inert or Vision plugin failed, it will stop swagger");
 });
 
 

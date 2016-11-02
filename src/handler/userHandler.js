@@ -174,116 +174,63 @@ module.exports = {
 
     // },
     removeUser: function (request, reply) {
-        let response = new Response;
-        let UserModel = mongoose.model("UserProfileCollection", userSchema);
-        let UserAddressSchema = mongoose.model("UserAddressCollection", userAddressSchema);
-        let UserFavStationSchema = mongoose.model("UserFavStationCollection", userFavStationSchema);
-        UserModel.findOneAndRemove({
-            user_id: request.params.userId
-        }, function (error, result) {
-            if (error) {
-                response.statusCode = 0;
-                response.message = "user delete - failed to run query";
-                response.error = error;
-            } else if (result) {
-                response.statusCode = 1;
-                response.message = " user delete completedd";
-                response.data = result;
-
-            } else {
-                response.statusCode = 0;
-                response.message = " No matching user record found to delete";
-            }
-            UserAddressSchema.remove({
+            let response = new Response;
+            let UserModel = mongoose.model("UserProfileCollection", userSchema);
+            let UserAddressSchema = mongoose.model("UserAddressCollection", userAddressSchema);
+            let UserFavStationSchema = mongoose.model("UserFavStationCollection", userFavStationSchema);
+            UserModel.findOneAndRemove({
                 user_id: request.params.userId
             }, function (error, result) {
                 if (error) {
                     response.statusCode = 0;
-                    response.message += " ; user address delete - failed to run query";
+                    response.message = "user delete - failed to run query";
                     response.error = error;
                 } else if (result) {
                     response.statusCode = 1;
-                    response.message += " ; user address delete completedd";
+                    response.message = " user delete completedd";
                     response.data = result;
 
                 } else {
                     response.statusCode = 0;
-                    response.message += " ; No matching user address record found to delete";
+                    response.message = " No matching user record found to delete";
                 }
-                UserFavStationSchema.remove({
+                UserAddressSchema.remove({
                     user_id: request.params.userId
                 }, function (error, result) {
                     if (error) {
                         response.statusCode = 0;
-                        response.message += " ; user favourite station delete - failed to run query";
+                        response.message += " ; user address delete - failed to run query";
                         response.error = error;
                     } else if (result) {
                         response.statusCode = 1;
-                        response.message += " ; user favourite station delete completedd";
+                        response.message += " ; user address delete completedd";
                         response.data = result;
 
                     } else {
                         response.statusCode = 0;
-                        response.message += " No matching user favourite station  record found to delete";
+                        response.message += " ; No matching user address record found to delete";
                     }
-                    reply(response);
+                    UserFavStationSchema.remove({
+                        user_id: request.params.userId
+                    }, function (error, result) {
+                        if (error) {
+                            response.statusCode = 0;
+                            response.message += " ; user favourite station delete - failed to run query";
+                            response.error = error;
+                        } else if (result) {
+                            response.statusCode = 1;
+                            response.message += " ; user favourite station delete completedd";
+                            response.data = result;
+
+                        } else {
+                            response.statusCode = 0;
+                            response.message += " No matching user favourite station  record found to delete";
+                        }
+                        reply(response);
+                    });
                 });
-            });
-        })
-    }, //end of remove user
-    //start geocode
-    getAddressGeoCode: function (request, reply) {
-        let response = new Response;
-        requestModule({
-            url: settings.googleGeoCodeApiUrl,
-            method: 'GET',
-            qs: {
-                address: request.query.address,
-                key: settings.googleApiKey
-            }
-        }, function (error, result, body) {
-            if (error) {
-                response.statusCode = 0;
-                response.message = " google geocode api failed, got errors";
-                response.error = error;
-            } else {
-                response.statusCode = 1;
-                response.message = " Able to geta data from google geocode api";
-                response.data = (result.body) ? JSON.parse(result.body) : null;
-
-            }
-            reply(response);
-
-
-        });
-
-    }, //end of geocode 
-
-    //start place api geocode finder
-    getPlaceGeoCode: function (request, reply) {
-            let response = new Response;
-            requestModule({
-                url: settings.googlePlaceApiTextSearchUrl,
-                method: 'GET',
-                qs: {
-                    query: request.query.address,
-                    key: settings.googleApiKey
-                }
-            }, function (error, result, body) {
-                if (error) {
-                    response.statusCode = 0;
-                    response.message = "google place api failed, got errors";
-                    response.error = error;
-                } else {
-                    response.statusCode = 1;
-                    response.message = " Able to geta data from google place api";
-                    response.data = (result.body) ? JSON.parse(result.body) : null;
-
-                }
-                reply(response);
-            });
-        } //end of place api geocode finder 
-
+            })
+        } //end of remove user
 
 
 
