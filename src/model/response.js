@@ -1,9 +1,6 @@
 'use strict';
 
-
-let Response = function () {
-
-}
+let Response = function () {}
 Response.prototype.statusCode = function (statusCode) {
     this.statusCode = statusCode;
 }

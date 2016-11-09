@@ -1,25 +1,22 @@
 'use strict';
 
+let bunyan = require('bunyan');
+//log class will now globally available
+global.log = bunyan.createLogger({
+  name: 'service-user'
+});
+
 let path = require('path'),
-
-
   Lout = require('lout'),
   Good = require('good'),
   GoodFile = require('good-file'),
-  bunyan = require('bunyan'),
   q = require('q'),
   Hapi = require('hapi'),
   Inert = require('inert'),
   Vision = require('vision'),
   HapiSwagger = require('hapi-swagger'),
-  Pack = require('../package');
-
-global.log = bunyan.createLogger({
-  name: 'service-user'
-});
-
-
-
+  Pack = require('../package'),
+  settings = require('./config/settings');
 
 /**
  * Construct the server
@@ -43,7 +40,7 @@ log.info('server constructed');
 // port: config.port
 
 server.connection({
-  port: process.env.PORT || 3001
+  port: settings.port
 
 });
 //debug('added port: ', config.port);
@@ -70,17 +67,6 @@ server.register([Inert, Vision, {
 let reporters = [new GoodFile({
   log: '*'
 }, __dirname + '/../logs/server.log')];
-
-server.route({
-  method: 'get',
-  path: '/{param*}',
-  handler: {
-    directory: {
-      path: __dirname + '/../public',
-      listing: true
-    }
-  }
-});
 
 
 /**

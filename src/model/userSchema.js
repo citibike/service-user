@@ -2,9 +2,6 @@
 
 var mongoose = require('../dao/db');
 
-
-
-
 let schema = new mongoose.Schema({
 
     first_name: String,
@@ -12,8 +9,4 @@ let schema = new mongoose.Schema({
     user_id: String,
 
 });
-
-
-
-
 module.exports = schema;

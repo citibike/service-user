@@ -14,7 +14,6 @@ module.exports = {
     createOrUpdateUser: function (request, reply) {
         let response = new Response;
         let UserModel = mongoose.model("UserProfileCollection", userSchema);
-
         var query = {
                 user_id: request.payload.user_id
             },
@@ -24,7 +23,6 @@ module.exports = {
                 new: true,
                 setDefaultsOnInsert: true
             };
-
         // Find the document
         UserModel.findOneAndUpdate(query, update, options, function (error, result) {
             if (error) {
@@ -36,10 +34,8 @@ module.exports = {
                 response.message = " Saved latest data into DB";
                 response.data = result;
             }
-
             reply(response);
         });
-
     },
     createOrUpdateUserAddress: function (request, reply) {
         let response = new Response;
@@ -52,11 +48,9 @@ module.exports = {
         if (request.payload.type != null) {
             request.payload.type = request.payload.type.toLowerCase();
         }
-
         /**
          * end 
          */
-
         var query = {
                 user_id: request.payload.user_id,
                 type: request.payload.type
@@ -78,29 +72,14 @@ module.exports = {
                 response.message = " Saved latest data into DB";
                 response.data = result;
             }
-
             reply(response);
         });
-        // userAddress.save(function (error, result) {
-        //     if (error) {
-        //         response.statusCode = 0;
-        //         response.message = " Unable to saved latest data into DB";
-        //         response.error = error;
-        //     } else {
-        //         response.statusCode = 1;
-        //         response.message = " Saved latest data into DB";
-        //         response.data = result;
-        //     }
-
-        //     reply(response);
-        // });
 
     },
     createOrUpdateUserFavStation: function (request, reply) {
         let response = new Response;
         let UserFavStaationModel = mongoose.model("UserFavStationCollection", userFavStationSchema);
         let userFavStation = new UserFavStaationModel(request.payload);
-
         // Find the document
         userFavStation.save(function (error, result) {
             if (error) {
@@ -112,10 +91,8 @@ module.exports = {
                 response.message = " Saved latest data into DB";
                 response.data = result;
             }
-
             reply(response);
         });
-
     },
     getUser: function (request, reply) {
         let response = new Response;
@@ -138,14 +115,13 @@ module.exports = {
             reply(response);
         })
     },
-    //type: request.params.type
+
     getUserAddressByType: function (request, reply) {
         let response = new Response;
         let AddressModel = mongoose.model("useraddresscollections", userSchema);
         if (null != request.params.type) {
             request.params.type = request.params.type.toLowerCase(); //as address type always saved in lower case
         }
-
         AddressModel.find({
             user_id: request.params.userId,
             type: request.params.type
@@ -168,12 +144,9 @@ module.exports = {
         })
     },
     // getUserFavourite : function (request, reply) {
-
+    //future requirement
     // },
-    //getUserAddressByType : function (request, reply) {
-
-    // },
-    removeUser: function (request, reply) {
+    removeUser: function (request, reply) { //it will remove user as well as related addresses if any and user favourite station if any
             let response = new Response;
             let UserModel = mongoose.model("UserProfileCollection", userSchema);
             let UserAddressSchema = mongoose.model("UserAddressCollection", userAddressSchema);
@@ -187,7 +160,7 @@ module.exports = {
                     response.error = error;
                 } else if (result) {
                     response.statusCode = 1;
-                    response.message = " user delete completedd";
+                    response.message = " user delete completed";
                     response.data = result;
 
                 } else {
@@ -203,7 +176,7 @@ module.exports = {
                         response.error = error;
                     } else if (result) {
                         response.statusCode = 1;
-                        response.message += " ; user address delete completedd";
+                        response.message += " ; user address delete completed";
                         response.data = result;
 
                     } else {
@@ -219,7 +192,7 @@ module.exports = {
                             response.error = error;
                         } else if (result) {
                             response.statusCode = 1;
-                            response.message += " ; user favourite station delete completedd";
+                            response.message += " ; user favourite station delete completed";
                             response.data = result;
 
                         } else {
